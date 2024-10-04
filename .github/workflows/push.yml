@@ -54,3 +54,15 @@ jobs:
           name: GrassBackup-Bukkit-${{ steps.prop_info.outputs.plugin_version }}-${{ env.SHORT_SHA }}
           path: |
             build/libs
+
+      - name: Create Release
+        if: github.repository_owner == 'TCBuildMC' && contains(github.event.head_commit.message, '[publish]') == true
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "${{ steps.prop_info.outputs.plugin_version }}"
+          tag_name: "${{ steps.prop_info.outputs.plugin_version }}"
+          files: |
+            build/libs/*.jar
+          target_commitish: ${{ github.event.ref }}
+          generate_release_notes: true
+          token: ${{ secrets.RELEASE_TOKEN }}
