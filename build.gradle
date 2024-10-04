@@ -1,0 +1,98 @@
+plugins {
+    id "java-library"
+    id "com.github.johnrengelman.shadow" version "8.1.1"
+    id "maven-publish"
+}
+
+group = project.maven_group
+version = project.plugin_version
+
+base {
+    archivesName = project.archives_base_name
+}
+
+repositories {
+    maven {
+        url = "https://repo.papermc.io/repository/maven-public/"
+    }
+    maven {
+        url = "https://repo.extendedclip.com/content/repositories/placeholderapi/"
+        content {
+            includeGroup "me.clip"
+        }
+    }
+    maven {
+        url = "https://repo.codemc.io/repository/maven-public/"
+    }
+    maven {
+        url = "https://jitpack.io/"
+        content {
+            includeGroupAndSubgroups "com.github"
+        }
+    }
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly "org.jetbrains:annotations:${project.jb_annotations_version}"
+    annotationProcessor compileOnly("org.projectlombok:lombok:${project.lombok_version}")
+
+    compileOnly "org.spigotmc:spigot-api:${project.bukkit_version}"
+
+    compileOnly "me.clip:placeholderapi:${project.papi_version}"
+    implementation "dev.jorel:commandapi-bukkit-shade:${project.command_api_version}"
+
+    implementation "com.github.TCBuildMC.PowerfulLib:i18n:${project.powerfullib_version}"
+
+//    implementation "org.bstats:bstats-bukkit:${project.bstats_version}"
+//    implementation "org.bstats:bstats-metrics:${project.bstats_version}"
+
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+
+    withSourcesJar()
+    withJavadocJar()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.encoding = "UTF-8"
+    it.options.release = 8
+}
+
+processResources {
+    filteringCharset "UTF-8"
+    filesMatching("plugin.yml") {
+        expand "version": project.version
+    }
+}
+
+compileJava.dependsOn clean
+
+jar {
+    archiveClassifier.set "dev"
+
+    from("LICENSE") {
+        rename { "${it}_${project.archives_base_name}" }
+    }
+}
+
+sourcesJar {
+    archiveClassifier.set "dev-sources"
+}
+
+shadowJar {
+    archiveClassifier.set null
+
+    relocate "dev.jorel.commandapi", "xyz.tcbuildmc.minecraft.grassbackup.bukkit.lib.commandapi"
+    relocate "xyz.tcbuildmc.common.powerfullib", "xyz.tcbuildmc.minecraft.grassbackup.bukkit.lib.powerfullib"
+    relocate "org.apache.commons.io", "xyz.tcbuildmc.minecraft.grassbackup.bukkit.lib.commonsio"
+}

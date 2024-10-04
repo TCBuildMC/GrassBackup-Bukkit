@@ -1,0 +1,10 @@
+name: GrassBackup
+version: "${version}"
+main: xyz.tcbuildmc.minecraft.grassbackup.bukkit.GrassBackupBukkitPlugin
+api-version: 1.13
+description: A Bukkit plugin saves your world by backing up.
+authors:
+  - TCBuildMC
+contributors:
+  - Block_Mrlimr267
+website: https://github.com/TCBuildMC/GrassBackup-Bukkit
