@@ -46,11 +46,11 @@ jobs:
         uses: christian-draeger/read-properties@1.1.1
         with:
           path: gradle.properties
-          properties: "release_version"
+          properties: "plugin_version"
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: GrassBackup-Bukkit-${{ steps.prop_info.outputs.release_version }}-${{ env.SHORT_SHA }}
+          name: GrassBackup-Bukkit-${{ steps.prop_info.outputs.plugin_version }}-${{ env.SHORT_SHA }}
           path: |
             build/libs
